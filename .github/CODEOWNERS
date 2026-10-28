@@ -1,0 +1,25 @@
+# Donos do código: o GitHub pede revisão destas pessoas automaticamente
+# em todo Pull Request que altere os caminhos abaixo.
+# A última regra que casar com o arquivo é a que vale.
+
+# Padrão: todo o repositório
+*                   @joaofilipigtissi
+
+# Código do app e testes
+/lib/               @joaofilipigtissi
+/test/              @joaofilipigtissi
+
+# Dependências (pubspec.yaml e lockfile)
+/pubspec.yaml       @joaofilipigtissi
+/pubspec.lock       @joaofilipigtissi
+
+# Plataformas nativas
+/android/           @joaofilipigtissi
+/ios/               @joaofilipigtissi
+/web/               @joaofilipigtissi
+/linux/             @joaofilipigtissi
+/macos/             @joaofilipigtissi
+/windows/           @joaofilipigtissi
+
+# Configuração do repositório e do pipeline
+/.github/           @joaofilipigtissi

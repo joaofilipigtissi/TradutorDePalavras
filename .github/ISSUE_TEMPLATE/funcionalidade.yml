@@ -1,0 +1,57 @@
+name: Funcionalidade
+description: Propor uma nova funcionalidade ou melhoria para o Tradutor de Palavras
+title: "feat: "
+labels: ["funcionalidade"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Descreva a funcionalidade do ponto de vista de quem usa o app.
+  - type: textarea
+    id: historia
+    attributes:
+      label: História de usuário
+      description: "Como <tipo de usuário>, quero <objetivo> para <benefício>."
+      placeholder: Como estudante, quero ver a tradução em espanhol para praticar mais um idioma.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      description: Qual parte do app é afetada?
+      options:
+        - Tela do tradutor (interface)
+        - Lista de palavras / idiomas
+        - Navegação (anterior / próxima)
+        - Plataformas (Android / iOS / Web / Desktop)
+        - Testes
+        - Documentação
+        - Pipeline / configuração do repositório
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Critérios de aceitação
+      description: Condições verificáveis para considerar a funcionalidade pronta.
+      placeholder: |
+        - [ ] Ao tocar em "Mostrar tradução", aparece a tradução em espanhol
+        - [ ] A tradução some ao trocar de palavra
+    validations:
+      required: true
+  - type: dropdown
+    id: prioridade
+    attributes:
+      label: Prioridade
+      options:
+        - Alta
+        - Média
+        - Baixa
+    validations:
+      required: true
+  - type: textarea
+    id: notas
+    attributes:
+      label: Observações
+      description: Telas de referência, dúvidas, dependências.
