@@ -1,60 +1,24 @@
 name: Defeito
-description: Relatar um defeito (bug) encontrado no app
-title: "fix: "
-labels: ["defeito"]
+description: Relate um erro encontrado
+title: 'fix: '
+labels: ['defeito']
 body:
-  - type: markdown
+  - type: input
+    id: versao
     attributes:
-      value: |
-        Obrigado por relatar! Quanto mais detalhes, mais rápido corrigimos.
-  - type: textarea
-    id: descricao
-    attributes:
-      label: Descrição do defeito
-      description: O que aconteceu de errado?
+      label: Versão / ambiente
+      description: 'Aparece no topo do site (ex.: "Ambiente staging · versão v1.2.0")'
     validations:
       required: true
   - type: textarea
     id: passos
     attributes:
       label: Passos para reproduzir
-      placeholder: |
-        1. Abra o app
-        2. Toque em "..."
-        3. Veja o erro
     validations:
       required: true
   - type: textarea
     id: esperado
     attributes:
-      label: Comportamento esperado
+      label: Resultado esperado x obtido
     validations:
       required: true
-  - type: textarea
-    id: obtido
-    attributes:
-      label: Comportamento obtido
-    validations:
-      required: true
-  - type: dropdown
-    id: severidade
-    attributes:
-      label: Severidade
-      options:
-        - Crítica (app não abre / trava)
-        - Alta (funcionalidade principal não funciona)
-        - Média (funciona com contorno)
-        - Baixa (visual / texto)
-    validations:
-      required: true
-  - type: input
-    id: ambiente
-    attributes:
-      label: Ambiente
-      description: Plataforma, dispositivo/navegador e versão do app.
-      placeholder: Android 14, Pixel 7, versão 1.0.0
-  - type: textarea
-    id: evidencias
-    attributes:
-      label: Evidências
-      description: Prints, vídeos ou logs (sem dados pessoais nem senhas).
