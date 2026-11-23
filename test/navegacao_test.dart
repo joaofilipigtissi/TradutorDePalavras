@@ -6,7 +6,7 @@ import 'package:tradutor_palavras/navegacao.dart';
 void main() {
   group('proximoIndice', () {
     test('avança uma posição no meio da lista', () {
-      expect(proximoIndice(3, 11), 5);
+      expect(proximoIndice(3, 11), 4);
     });
 
     test('depois da última palavra volta para a primeira', () {
