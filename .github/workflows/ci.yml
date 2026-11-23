@@ -35,9 +35,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Instalar Flutter (canal stable)
+      - name: Instalar Flutter (versão fixa)
         uses: subosito/flutter-action@v2
         with:
+          # Versão fixa = build reprodutível (PGC 4.1). É a versão compatível com
+          # o pubspec.lock versionado. Para atualizar o Flutter: mude aqui, rode
+          # "flutter pub get" localmente com a mesma versão e versione o novo lock.
+          flutter-version: '3.47.9'
           channel: stable
           cache: true
 
