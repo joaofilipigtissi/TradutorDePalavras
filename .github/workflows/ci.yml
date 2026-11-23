@@ -1,0 +1,122 @@
+# Integração Contínua — PGC seção 5 (Aula 2)
+#
+# Adaptado de docs/aulas/modelos/ci-node.yml da ONGConecta para Flutter:
+#   setup-node  -> subosito/flutter-action
+#   npm ci      -> flutter pub get --enforce-lockfile
+#   lint        -> flutter analyze
+#   testes      -> flutter test --coverage (+ quality gate de 60% sobre coverage/lcov.info)
+#   build       -> flutter build web
+#
+# Na proteção da main, marque como obrigatórios SOMENTE:  ci-ok  e  titulo-pr
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # permite rodar manualmente pela aba Actions
+
+# Um push novo no mesmo PR cancela a execução anterior (economiza minutos).
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Limite mínimo de cobertura de linhas (PGC 5.3).
+  COBERTURA_MINIMA: '60'
+
+jobs:
+  qualidade:
+    name: Lint, testes e build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Instalar Flutter (canal stable)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Versões
+        run: flutter --version
+
+      - name: Instalar dependências (exatamente as do pubspec.lock)
+        # --enforce-lockfile é o equivalente ao "npm ci": falha se o lockfile
+        # não bater com o pubspec.yaml, em vez de atualizá-lo em silêncio.
+        run: flutter pub get --enforce-lockfile
+
+      - name: Lint
+        # Erros e warnings (ex.: variável declarada e não usada) reprovam o PR.
+        run: flutter analyze
+
+      - name: Testes com cobertura
+        run: flutter test --coverage
+
+      - name: Quality gate de cobertura (>= 60% das linhas)
+        # O Flutter não tem limite de cobertura nativo: somamos LF (linhas
+        # instrumentadas) e LH (linhas executadas) do coverage/lcov.info.
+        run: |
+          if [ ! -f coverage/lcov.info ]; then
+            echo "::error::coverage/lcov.info não foi gerado."
+            exit 1
+          fi
+          read TOTAL COBERTAS < <(awk -F: '/^LF:/{lf+=$2} /^LH:/{lh+=$2} END{print lf+0, lh+0}' coverage/lcov.info)
+          if [ "$TOTAL" -eq 0 ]; then
+            echo "::error::Nenhuma linha instrumentada no relatório de cobertura."
+            exit 1
+          fi
+          PERCENTUAL=$(( COBERTAS * 100 / TOTAL ))
+          echo "Cobertura de linhas: ${PERCENTUAL}% (${COBERTAS}/${TOTAL}). Mínimo: ${COBERTURA_MINIMA}%."
+          echo "### Cobertura de linhas: ${PERCENTUAL}% (mínimo ${COBERTURA_MINIMA}%)" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$PERCENTUAL" -lt "$COBERTURA_MINIMA" ]; then
+            echo "::error::Cobertura ${PERCENTUAL}% abaixo do mínimo de ${COBERTURA_MINIMA}% (PGC 5.3)."
+            exit 1
+          fi
+
+      - name: Publicar relatório de cobertura
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: cobertura
+          path: coverage/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Build (web)
+        run: flutter build web
+
+  dependencias:
+    name: Análise de dependências (SCA)
+    # Compara as dependências do PR com a main e bloqueia vulnerabilidade crítica (PGC 5.3).
+    # Lê o pubspec.lock; exige repositório público.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/dependency-review-action@v5
+        with:
+          fail-on-severity: critical
+
+  ci-ok:
+    name: ci-ok
+    # always(): roda mesmo quando os jobs acima foram pulados ou falharam.
+    if: always()
+    needs: [qualidade, dependencias]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Conferir resultado dos jobs
+        env:
+          RESULTADOS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Resultados: $RESULTADOS"
+          for r in $RESULTADOS; do
+            if [ "$r" = "failure" ] || [ "$r" = "cancelled" ]; then
+              echo "::error::Algum job do CI falhou — merge bloqueado (PGC 5.2)."
+              exit 1
+            fi
+          done
+          echo "Todos os jobs necessários passaram."
