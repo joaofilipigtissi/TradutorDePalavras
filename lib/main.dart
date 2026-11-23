@@ -68,7 +68,6 @@ class _TradutorScreenState extends State<TradutorScreen> {
 
   // Mostra as duas traduções da palavra atual.
   void mostrarTraducao() {
-    final naoUsada = 42;
     setState(() {
       mostrandoTraducao = true;
     });
