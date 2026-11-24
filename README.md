@@ -10,7 +10,7 @@ volta para a primeira, e vice-versa).
 ## Funcionalidades
 
 - Exibe a palavra atual em português.
-- Botão **Mostrar tradução**: exibe as traduções em inglês e francês.
+- Botão **Mostrar tradução** / **Ocultar tradução**: exibe ou esconde as traduções em inglês e francês.
 - Botões **Anterior** e **Próxima**: navegam pela lista (circular) e escondem a tradução.
 - Indicador "Palavra X de N".
 
