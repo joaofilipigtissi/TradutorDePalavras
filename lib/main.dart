@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'navegacao.dart';
+
 // Modelo simples que representa uma palavra e suas duas traduções.
 class Palavra {
   final String principal;
@@ -74,7 +76,7 @@ class _TradutorScreenState extends State<TradutorScreen> {
   // Avança para a próxima palavra (lista circular) e esconde as traduções.
   void proximaPalavra() {
     setState(() {
-      currentIndex = (currentIndex + 1) % palavras.length;
+      currentIndex = proximoIndice(currentIndex, palavras.length);
       mostrandoTraducao = false;
     });
   }
@@ -82,7 +84,7 @@ class _TradutorScreenState extends State<TradutorScreen> {
   // Volta para a palavra anterior (lista circular) e esconde as traduções.
   void palavraAnterior() {
     setState(() {
-      currentIndex = (currentIndex - 1 + palavras.length) % palavras.length;
+      currentIndex = indiceAnterior(currentIndex, palavras.length);
       mostrandoTraducao = false;
     });
   }
