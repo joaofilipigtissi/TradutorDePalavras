@@ -1,0 +1,23 @@
+# Dependabot — PGC seção 13 (dependências de terceiros como itens de configuração)
+# Abre PRs de atualização; eles passam pelo mesmo CI e pela mesma revisão dos demais.
+# O prefixo "chore(deps)" faz o título passar no check titulo-pr e não gera versão nova.
+
+version: 2
+updates:
+  # Pacotes Dart/Flutter (pubspec.yaml / pubspec.lock na raiz).
+  - package-ecosystem: pub
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: 'chore(deps)'
+
+  # As próprias actions usadas nos workflows também são dependências.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: 'chore(deps)'
