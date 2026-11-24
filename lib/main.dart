@@ -139,7 +139,8 @@ class _TradutorScreenState extends State<TradutorScreen> {
                     child: const Text('Anterior'),
                   ),
                   ElevatedButton(
-                    onPressed: mostrarTraducao,
+                    // Desabilitado enquanto a tradução já está visível.
+                    onPressed: mostrandoTraducao ? null : mostrarTraducao,
                     child: const Text('Mostrar tradução'),
                   ),
                   ElevatedButton(
