@@ -22,20 +22,28 @@ void main() {
     expect(find.text('Francês: Maison'), findsOneWidget);
   });
 
-  testWidgets('"Mostrar tradução" fica desabilitado com a tradução visível',
+  testWidgets('com a tradução visível o botão vira "Ocultar tradução"',
       (tester) async {
     await tester.pumpWidget(const TradutorApp());
-
-    ElevatedButton botao() => tester.widget<ElevatedButton>(
-          find.widgetWithText(ElevatedButton, 'Mostrar tradução'),
-        );
-
-    expect(botao().onPressed, isNotNull);
 
     await tester.tap(find.widgetWithText(ElevatedButton, 'Mostrar tradução'));
     await tester.pump();
 
-    expect(botao().onPressed, isNull);
+    expect(find.widgetWithText(ElevatedButton, 'Ocultar tradução'), findsOneWidget);
+    expect(find.widgetWithText(ElevatedButton, 'Mostrar tradução'), findsNothing);
+  });
+
+  testWidgets('"Ocultar tradução" esconde as traduções', (tester) async {
+    await tester.pumpWidget(const TradutorApp());
+
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Mostrar tradução'));
+    await tester.pump();
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Ocultar tradução'));
+    await tester.pump();
+
+    expect(find.text('Inglês: House'), findsNothing);
+    expect(find.text('Francês: Maison'), findsNothing);
+    expect(find.widgetWithText(ElevatedButton, 'Mostrar tradução'), findsOneWidget);
   });
 
   testWidgets('"Próxima" avança e esconde a tradução', (tester) async {

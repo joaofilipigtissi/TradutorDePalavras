@@ -66,10 +66,10 @@ class _TradutorScreenState extends State<TradutorScreen> {
   // Controla se as traduções da palavra atual estão visíveis.
   bool mostrandoTraducao = false;
 
-  // Mostra as duas traduções da palavra atual.
-  void mostrarTraducao() {
+  // Mostra ou oculta as duas traduções da palavra atual.
+  void alternarTraducao() {
     setState(() {
-      mostrandoTraducao = true;
+      mostrandoTraducao = !mostrandoTraducao;
     });
   }
 
@@ -114,7 +114,7 @@ class _TradutorScreenState extends State<TradutorScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Traduções: só aparecem depois de "Mostrar tradução".
+              // Traduções: aparecem com "Mostrar" e somem com "Ocultar tradução".
               if (mostrandoTraducao) ...[
                 Text(
                   '$idiomaSecundario: ${palavraAtual.traducao1}',
@@ -139,9 +139,11 @@ class _TradutorScreenState extends State<TradutorScreen> {
                     child: const Text('Anterior'),
                   ),
                   ElevatedButton(
-                    // Desabilitado enquanto a tradução já está visível.
-                    onPressed: mostrandoTraducao ? null : mostrarTraducao,
-                    child: const Text('Mostrar tradução'),
+                    // Alterna: com a tradução visível, vira "Ocultar tradução".
+                    onPressed: alternarTraducao,
+                    child: Text(
+                      mostrandoTraducao ? 'Ocultar tradução' : 'Mostrar tradução',
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: proximaPalavra,
